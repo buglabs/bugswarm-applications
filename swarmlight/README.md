@@ -14,9 +14,9 @@ Turn lights on and off using this application built over BUGswarm.
 
 From the home directory of the BUG:
 
-'''shell
+```shell
 cd swarmlight
 ./run.sh
-'''
+```
 
 Visit the [SwarmLight](http://swarmstuff-aturley.dotcloud.com/swarmlight.html) website to turn the lights on and off.
