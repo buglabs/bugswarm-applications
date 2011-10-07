@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <script src="http://cdn.buglabs.net/swarm/swarm-v0.2.0.beta.js"></script>
+        <!--
+
+<script src="../dist/dev/swarm-v1.0.0.beta.js"></script>
+<script src="../dist/int/swarm-v1.0.0.beta.js"></script>
+<script src="../dist/test/swarm-v1.0.0.beta.js"></script>
+<script src="../dist/stage/swarm-v1.0.0.beta.js"></script>
+<script src="../dist/prod/swarm-v1.0.0.beta.js"></script>
+-->
+    </head>
+    <body>
+        <script>
+     SWARM.join({apikey: '33d1e9e8fe9802e34c99b6c465552a0bc2ca0714',
+                 swarms: ['3f661d513bda60bd41419666dd8fa381ec17e979'],
+                 callback: function(message) {
+             }
+         });
+         lighton = function() {
+             console.log("on");
+             SWARM.send("LIGHTON");
+         };
+         lightoff = function() {
+             console.log("off");
+             SWARM.send("LIGHTOFF");
+         };
+
+        </script>
+    </body>
+<div>
+<H1>ON<H1>
+<div id="on" style="width:100px; height:100px; background-color:green" onclick="lighton()"></div>
+</div>
+<H1>OFF<H1>
+<div id="off" style="width:100px; height:100px; background-color:red" onclick="lightoff()"></div>
+</div>
+</html>
