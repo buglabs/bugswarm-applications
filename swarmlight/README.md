@@ -12,7 +12,7 @@ git submodule init
 git submodule update
 ```
 
-* Place the swarmlight directory of the fork in the home directory of the BUG.
+* SCP the swarmlight directory of the fork in the home directory of the BUG.
 * Plug lights into 'X-10 Powerhouse' outlet.
 * Plug the 'X-10 Powerhouse' outlet into the 'X-10 ActiveHome' outlet.
 * Connect the 'X-10 ActiveHome' outlet to the BUG through a serial -> USB connection.
