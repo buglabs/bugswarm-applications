@@ -26,4 +26,4 @@ cd swarmlight
 ./run.sh
 ```
 
-Visit the [SwarmLight](http://swarmstuff-aturley.dotcloud.com/swarmlight.html) website to turn the lights on and off.
+Visit the [SwarmLight](http://developer.bugswarm.net/swarmlight.html) website to turn the lights on and off.
