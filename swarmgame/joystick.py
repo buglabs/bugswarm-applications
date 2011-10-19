@@ -74,19 +74,19 @@ def listen_and_produce():
                 elif event_name == 'JoyAxisMotion':
                     axis = e.axis
                     value = e.value
-                    if axis > 0 and value < 0:
+                    if (axis > 0 and value < 0) or (axis == 0 and value > 0 and value < .003):
                         axis = "Y"
                         value = "FORWARD"
-                    elif axis > 0 and value > 0:
+                    elif (axis > 0 and value > 0) or (axis == 0 and value > .007 and value < 1):
                         axis = "Y"
                         value = "BACKWARD"
-                    elif axis > 0 and value == 0:
+                    elif (axis > 0 and value == 0) or (axis == 0 and value > .003 and value < 1):
                         axis= "Y"
                         value = "STOP"
                     elif axis == 0 and value > 0:
                         axis = "X"
                         value = "FORWARD"
-                    elif axis == 0 and value < 0:
+                    elif (axis == 0 and value == 1) or (axis == 0 and value < 0):
                         axis="X"
                         value = "BACKWARD"
                     elif axis == 0 and value == 0:
