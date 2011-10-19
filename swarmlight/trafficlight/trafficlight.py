@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import socket
 
-HOST = '192.168.0.176'
+HOST = '127.0.0.1'
 PORT = 23
 f = open("/home/root/swarmlight/trafficlight/trafficlight_fifo")
 
