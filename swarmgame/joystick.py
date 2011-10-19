@@ -12,7 +12,7 @@ def main():
     hostname = "api.bugswarm.net"
     api_key = "a35c8276f241a967d8bdf59a07d4b5d522447b17"
     swarm_id = "74b9ae0e70eebb084d5e97014a1a29668911c070"
-    resource_id = "e6af10a0d87e9c530194ae887248cbbb2ecdf83b"
+    resource_id = "cf8e6e43665720c74cd2923d6e2500ead12f56a7"
     produce_init(hostname, api_key, swarm_id, resource_id)
 
     # connect and send initialization message
@@ -68,9 +68,9 @@ def listen_and_produce():
             for e in pygame.event.get():
                 event_name = pygame.event.event_name(e.type)
                 if event_name == 'JoyButtonDown':
-                    send_message('{"message": {"to": ["74b9ae0e70eebb084d5e97014a1a29668911c070"], "payload": {"%i" : "DOWN"}}}' %(e.button + 1))
+                    send_message('{"message": {"to": ["74b9ae0e70eebb084d5e97014a1a29668911c070"], "payload": {"Button" : "%i", "Action" : "DOWN"}}}' %(e.button + 1))
                 elif event_name == 'JoyButtonUp':
-                    send_message('{"message": {"to": ["74b9ae0e70eebb084d5e97014a1a29668911c070"], "payload": {"%i" : "UP"}}}' %(e.button + 1))
+                    send_message('{"message": {"to": ["74b9ae0e70eebb084d5e97014a1a29668911c070"], "payload": {"Button" : "%i", "Action": "UP"}}}' %(e.button + 1))
                 elif event_name == 'JoyAxisMotion':
                     axis = e.axis
                     value = e.value
@@ -92,7 +92,7 @@ def listen_and_produce():
                     elif axis == 0 and value == 0:
                         axis = "X"
                         value = "STOP"
-                    send_message('{"message": {"to": ["74b9ae0e70eebb084d5e97014a1a29668911c070"], "payload": {"%s" : "%s"}}}' %(axis, value))
+                    send_message('{"message": {"to": ["74b9ae0e70eebb084d5e97014a1a29668911c070"], "payload": {"Button": "%s", "Action" : "%s"}}}' %(axis, value))
                 elif e.type == pygame.USEREVENT:
                     send_message('{"message": {"to": ["74b9ae0e70eebb084d5e97014a1a29668911c070"], "payload": "\n"}}')
     except KeyboardInterrupt:
