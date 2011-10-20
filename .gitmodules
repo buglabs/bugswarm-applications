@@ -1,3 +1,6 @@
 [submodule "swarmlight/bugswarm-tools"]
 	path = swarmlight/bugswarm-tools
 	url = git@github.com:buglabs/bugswarm-tools.git
+[submodule "swarmgame/bugswarm-tools"]
+	path = swarmgame/bugswarm-tools
+	url = git@github.com:buglabs/bugswarm-tools.git

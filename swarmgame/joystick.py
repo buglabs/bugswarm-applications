@@ -11,7 +11,7 @@ j = None;
 def main():
     hostname = "api.bugswarm.net"
     api_key = "a35c8276f241a967d8bdf59a07d4b5d522447b17"
-    swarm_id = "d0e0de97f0b1ebe17762654f209b3bd100de6bf6"
+    swarm_id = "74b9ae0e70eebb084d5e97014a1a29668911c070"
     resource_id = "cf8e6e43665720c74cd2923d6e2500ead12f56a7"
     produce_init(hostname, api_key, swarm_id, resource_id)
 
@@ -20,7 +20,7 @@ def main():
     global j
     j = pygame.joystick.Joystick(0)
     j.init()
-    send_message('{"message": {"to": ["d0e0de97f0b1ebe17762654f209b3bd100de6bf6"], "payload": "Joystick Initialized: %s"}}' %(j.get_name()))
+    send_message('{"message": {"to": ["74b9ae0e70eebb084d5e97014a1a29668911c070"], "payload": "Joystick Initialized: %s"}}' %(j.get_name()))
 
     # send a blank message every 30 secs to maintain connection
     pygame.time.set_timer(pygame.USEREVENT, 30000)
@@ -44,7 +44,7 @@ def produce_init(hostname, api_key, swarm_id, resource_id):
 
     # send initial message
     try:
-        msg = '{"message": {"to": ["d0e0de97f0b1ebe17762654f209b3bd100de6bf6"], "payload": "Joystick Connected"}}'
+        msg = '{"message": {"to": ["74b9ae0e70eebb084d5e97014a1a29668911c070"], "payload": "Joystick Connected"}}'
         size = hex(len(msg))[2:] + "\r\n"
         chunk = msg + "\r\n"
         conn.send(size+chunk)
@@ -68,9 +68,9 @@ def listen_and_produce():
             for e in pygame.event.get():
                 event_name = pygame.event.event_name(e.type)
                 if event_name == 'JoyButtonDown':
-                    send_message('{"message": {"to": ["d0e0de97f0b1ebe17762654f209b3bd100de6bf6"], "payload": {"Button" : "%i", "Action" : "DOWN"}}}' %(e.button + 1))
+                    send_message('{"message": {"to": ["74b9ae0e70eebb084d5e97014a1a29668911c070"], "payload": {"Button" : "%i", "Action" : "DOWN"}}}' %(e.button + 1))
                 elif event_name == 'JoyButtonUp':
-                    send_message('{"message": {"to": ["d0e0de97f0b1ebe17762654f209b3bd100de6bf6"], "payload": {"Button" : "%i", "Action": "UP"}}}' %(e.button + 1))
+                    send_message('{"message": {"to": ["74b9ae0e70eebb084d5e97014a1a29668911c070"], "payload": {"Button" : "%i", "Action": "UP"}}}' %(e.button + 1))
                 elif event_name == 'JoyAxisMotion':
                     axis = e.axis
                     value = e.value
@@ -92,9 +92,9 @@ def listen_and_produce():
                     elif axis == 0 and value == 0:
                         axis = "X"
                         value = "STOP"
-                    send_message('{"message": {"to": ["d0e0de97f0b1ebe17762654f209b3bd100de6bf6"], "payload": {"Button": "%s", "Action" : "%s"}}}' %(axis, value))
+                    send_message('{"message": {"to": ["74b9ae0e70eebb084d5e97014a1a29668911c070"], "payload": {"Button": "%s", "Action" : "%s"}}}' %(axis, value))
                 elif e.type == pygame.USEREVENT:
-                    send_message('{"message": {"to": ["d0e0de97f0b1ebe17762654f209b3bd100de6bf6"], "payload": "\n"}}')
+                    send_message('{"message": {"to": ["74b9ae0e70eebb084d5e97014a1a29668911c070"], "payload": "\n"}}')
     except KeyboardInterrupt:
         j.quit()
         conn.close()
