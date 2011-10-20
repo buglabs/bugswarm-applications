@@ -1,0 +1,2 @@
+#!/bin/bash
+./bugswarm-tools/consume.py consume 74b9ae0e70eebb084d5e97014a1a29668911c070 3c8cd2dafa17ba8cb466244aee014ef806594506
