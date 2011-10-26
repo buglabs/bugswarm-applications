@@ -6,6 +6,7 @@ import subprocess
 import threading
 import sys
 import json
+from datetime import datetime
 
 conn = None
 hostname = "api.bugswarm.net"
@@ -72,6 +73,7 @@ def get_stats():
     stats["usr"] = mpstat_out[3]
     stats["nice"] = mpstat_out[4]
     stats["sys"] = mpstat_out[5]
+    stats["datetime"] = str(datetime.now())
     return json.dumps(stats)
 
 class IntervalProducer(threading.Thread):
