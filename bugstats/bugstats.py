@@ -10,9 +10,9 @@ from datetime import datetime
 
 conn = None
 hostname = "api.bugswarm.net"
-api_key = "a35c8276f241a967d8bdf59a07d4b5d522447b17"
-swarm_id = "83537f005a15bc5f65935997ef858461c8f86608"
-resource_id = "7ebaf88e69998588f961c2aaf9950e8f1409371a"
+api_key = "7a849e6548dbd6f8034bb7cc1a37caa0b1a2654b"
+swarm_id = "0c966d48e16908975ae483642ed7302e7b6ec7d7"
+resource_id = "1c85f72ef0a57fc2722540294e349343fccfd1c1"
 
 def main():
     swarm_init()
@@ -61,9 +61,14 @@ def send_message(msg):
     except Exception as e:
         print 'A problem has occured: ', e
 
-def produce_stats_public():
+def produce_stats_public(isImmediate):
     stats = get_stats()
-    message = '{"message": {"to": ["%s"], "payload": %s}}'%(swarm_id, stats)
+    if isImmediate == True:
+        stats["immediate"] = True;
+    else:
+        stats["immediate"] = False;
+    statsJSON = json.dumps(stats);
+    message = '{"message": {"to": ["%s"], "payload": %s}}'%(swarm_id, statsJSON)
     send_message(message)
 
 def get_stats():
@@ -74,7 +79,8 @@ def get_stats():
     stats["nice"] = mpstat_out[4]
     stats["sys"] = mpstat_out[5]
     stats["datetime"] = str(datetime.now())
-    return json.dumps(stats)
+    stats["position"] = {"lat": 40.73, "lon": -73.99}
+    return stats
 
 class IntervalProducer(threading.Thread):
 
@@ -85,7 +91,7 @@ class IntervalProducer(threading.Thread):
         t.start()
 
     def interval_stats(self):
-        produce_stats_public()
+        produce_stats_public(False)
         if self._running:
             t = threading.Timer(5, self.interval_stats)
             t.start()
@@ -110,7 +116,7 @@ class ImmediateProducer(threading.Thread):
                     if key == 'message':
                         message_content = stanza_json['message']
                         if message_content['payload'] == 'stats':
-                            produce_stats_public()
+                            produce_stats_public(True)
                             
                 print stanza
                 stanza = ""
