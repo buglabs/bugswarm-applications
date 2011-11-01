@@ -18,6 +18,8 @@ api_key = "7a849e6548dbd6f8034bb7cc1a37caa0b1a2654b"
 swarm_id = "0c966d48e16908975ae483642ed7302e7b6ec7d7"
 resource_map = {"1":"1c85f72ef0a57fc2722540294e349343fccfd1c1", "2":"1f8757afbd3b814f85e1da02fe6ce1c802abb1a7", "3":"6a7166dd0f14cdca9b95f260cbee86129aac8991", "4":"29f7ba8c5fc61cbf3fc97f43d72b755c55073cfd", "5":"9cd5ee810ca0f8ed99114ef5e17afa854e3852ea", "6":"8969c03718274cbb62be0ab056b9d37c6471fe4a", "7":"b1eb3f1c13b581a1f5b962e4d5378f10f06780dd", "8":"39525163ebef8bc83dc6fd891e7cea1e8fe21987", "9":"a540cd12f6e098cdde71404bab964a2302da2f23", "10":"4588344415bc95e0edd00a51e33452ab70808878"}
 resource_id = None
+latitude = None
+longitude = None
 produce_fake = False
 interval_producer = None
 immediate_producer = None
@@ -35,7 +37,7 @@ def main():
     bugstats(bug_number, options.fake)
 
 def bugstats(bug_number, fake):
-    global resource_id, produce_fake
+    global resource_id, produce_fake, latitude, longitude
     try:
         if (int(bug_number) > 10) or (int(bug_number < 1)):
             print "BUG_NUMBER must be between 1 and 10"
@@ -46,6 +48,8 @@ def bugstats(bug_number, fake):
     resource_id = get_resource_id(bug_number)
     if fake == True:
         produce_fake = True
+    latitude = round(random.uniform(39.7, 40.2), 2)
+    longitude = round(random.uniform(-73.5, -74.5), 2)
     signal.signal(signal.SIGINT, signal_handler)
     swarm_init()
     participate()
@@ -105,22 +109,24 @@ def produce_stats_public(isImmediate):
     send_message(message)
 
 def get_stats():
+    global latitude, longitude
     stats = {}
     mpstat_out = [x for x in subprocess.Popen("mpstat", stdout=subprocess.PIPE).stdout.readlines()[-1].strip().split(" ") if len(x) != 0]
     stats["usr"] = mpstat_out[3]
     stats["nice"] = mpstat_out[4]
     stats["sys"] = mpstat_out[5]
     stats["datetime"] = str(datetime.now())
-    stats["position"] = {"lat": 40.73, "lon": -73.99}
+    stats["position"] = {"lat": latitude, "lon": longitude}
     return stats
 
 def get_fake_stats():
+    global latitude, longitude
     stats = {}
     stats["usr"] = random.uniform(0,10)
     stats["nice"] = random.uniform(0,10)
     stats["sys"] = random.uniform(0,10)
     stats["datetime"] = str(datetime.now())
-    stats["position"] = {"lat": 40.73, "lon": -73.99}
+    stats["position"] = {"lat": latitude, "lon": longitude}
     return stats
 
 def signal_handler(signal, frame):
