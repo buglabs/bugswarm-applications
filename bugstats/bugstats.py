@@ -65,7 +65,6 @@ def swarm_init():
     conn.putrequest('POST', sel)
     conn.putheader("x-bugswarmapikey", api_key)
     conn.putheader("transfer-encoding", "chunked")
-    conn.putheader("connection", "keep-alive")
     conn.endheaders()
     time.sleep(1)
 
@@ -173,7 +172,8 @@ class ImmediateProducer(threading.Thread):
                 for key in stanza_json:
                     if key == 'message':
                         message_content = stanza_json['message']
-                        if message_content['payload'] == 'stats':
+                        payload = message_content['payload']
+                        if payload['out'] == 'get stats':
                             produce_stats_public(True)
                             
                 print stanza
