@@ -172,9 +172,14 @@ class ImmediateProducer(threading.Thread):
                 for key in stanza_json:
                     if key == 'message':
                         message_content = stanza_json['message']
-                        payload = message_content['payload']
-                        if payload['out'] == 'get stats':
-                            produce_stats_public(True)
+                        for key in message_content:
+                            if key == 'payload':
+                                payload = message_content['payload']
+                                for key in payload:
+                                    if key == 'out':
+                                        out = payload['out']
+                                        if out == 'get stats':
+                                            produce_stats_public(True)
                             
                 print stanza
                 stanza = ""
