@@ -65,17 +65,20 @@ def swarm_init():
     conn.putrequest('POST', sel)
     conn.putheader("x-bugswarmapikey", api_key)
     conn.putheader("transfer-encoding", "chunked")
+    conn.putheader("connection", "keep-alive")
     conn.endheaders()
     time.sleep(1)
 
+    conn.send('2\r\n\n\n\r\n')
+
     try:
-        msg = '{"message": {"to": ["' + swarm_id + '"], "payload": "BUG Connected"}}'
+        msg = '{"message": {"to": ["' + swarm_id + '"], "payload": {"status": "connected"}}}'
         size = hex(len(msg))[2:] + "\r\n"
         chunk = msg + "\r\n"
         conn.send(size+chunk)
 
     except Exception as e:
-        print 'A problem has occured: ' + str(e)            
+        print 'A problem has occured: ' + str(e)
 
 def participate():    
     global interval_producer, immediate_producer
