@@ -4,18 +4,33 @@ resourceID = "d00884c1eb2d2ee6d886da0407028e52fd0ee188";
 swarmID = "caa6343db41ce9359c76a4d0b066e34d27e47eb0";
 
 // send functions
+var announceConnector = function() {
+    var payload;    
+    payload = {"status_announcement": "connector"};
+    console.log("Announcint connector status");
+    SWARM.send(payload);
+};
+
 var sendCapabilities = function(from) {
-    var payload = {"capabilities": {"feeds": ["Location", "Acceleration"], "modules": {"slot1": "LCD", "slot2": "GPS"}}};
-    console.log("Sending capabilities to resource: " + from.resource);
-    SWARM.send(payload, [{"swarm": swarmID, "resource": from.resource}]);
+    var payload;
+    payload = {"capabilities": {"feeds": ["Location", "Acceleration"], "modules": {"slot1": "LCD", "slot2": "GPS"}}};
+    console.log("Sending private capabilities to resource: " + from.resource);
+    SWARM.send(payload, [{swarm: "caa6343db41ce9359c76a4d0b066e34d27e47eb0", resource: from.resource}]);
 };
 
 var sendFeedResponse = function(from, payload) {
-    console.log("Will send feed response to: " + from.resource);
-    console.log("Will send feed response with feed: " + payload.feed);
+    console.log("TODO: Send feed response to: " + from.resource);
 };
 
 //conditionals
+var isConnectorInterest = function(payload) {
+    if (payload.status_announcement && (payload.status_announcement === "connector-interest")) {
+        return true;
+    } else {
+        return false;
+    }
+};
+
 var isSwarmPresence = function(from) {
     if (from.swarm) {
         return true;
@@ -24,16 +39,8 @@ var isSwarmPresence = function(from) {
     }    
 };
 
-var isSelfPresence = function(from) {
-    if (from.resource === resourceID) {
-        return true;
-    } else {
-        return false;
-    }
-};
-
-var isPresenceUnavailable = function(type) {    
-    if (type && (type === "unavailable")) {
+var isPublicMessage = function(publicVal) {
+    if (publicVal === true) {
         return true;
     } else {
         return false;
@@ -64,7 +71,8 @@ SWARM.connect({apikey: participationKey,
                // callbacks
                onconnect:
                    function onConnect() {
-                       console.log("Connected to swarm: " + swarmID);                       
+                       console.log("Connected to swarm: " + swarmID);
+                       announceConnector();
                    },
                onpresence:
                    function onPresence(presence) {
@@ -76,9 +84,6 @@ SWARM.connect({apikey: participationKey,
         
                        if (isSwarmPresence(from)) {
                            console.log("Presence: " + presence);
-                           if (!isSelfPresence(from) && !isPresenceUnavailable(type)) {
-                               sendCapabilities(from);
-                           }
                        }
                    },
                onmessage:
@@ -90,8 +95,14 @@ SWARM.connect({apikey: participationKey,
                        payload = messageObj.message.payload;
                        publicVal = messageObj.message.public;
 
+                       if (isPublicMessage(publicVal)) {
+                           if (isConnectorInterest(payload)) {
+                               sendCapabilities(from);
+                           }
+                       }
+
                        if (isPrivateMessage(publicVal)) {
-                           console.log("Message: " + message);
+                           console.log("Private Message: " + message);
                            if (isFeedRequest(payload)) {
                                sendFeedResponse(from, payload);
                            }
