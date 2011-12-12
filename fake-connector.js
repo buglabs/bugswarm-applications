@@ -51,8 +51,8 @@ var respondToFeedRequest = function(from, payload) {
         var frequency = params.frequency;
     }
     if (frequency) {
-        accelerationInterval = window[resourceID + "_acceleration"];
-        locationInterval = window[resourceID + "_location"];
+        var accelerationInterval = window[sendTo + "_acceleration"];
+        var locationInterval = window[sendTo + "_location"];
         if (feed === "Acceleration") {
             if (accelerationInterval) {
                 clearInterval(accelerationInterval);
