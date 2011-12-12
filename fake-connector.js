@@ -5,7 +5,10 @@ swarmID = "244d8089bb8ec55a2fce40b89b59555b052ee96a";
 feeds = ["Location", "Acceleration"];
 modules = {"slot1": "LCD", "slot2": "GPS"};
 
+//acquire acceleration data
 var accelZ, accelY, accelX;
+
+//iOS
 if (window.DeviceMotionEvent) {
     window.ondevicemotion = function(e) {
         accelZ = e.accelerationIncludingGravity.z;
@@ -14,7 +17,17 @@ if (window.DeviceMotionEvent) {
     }
 }
 
-// send functions
+//acquire location data
+var gpsLat, gpsLon;
+
+var gpsHandler = function(location) {
+    gpsLat = location.coords.latitude;
+    gpsLon = location.coords.longitude;
+};
+
+var updateGPS = setInterval(function() {navigator.geoLocation.getCurrentPosition(gpsHandler);},1000);
+
+//send functions
 var sendCapabilities = function(from) {
     var payload;
     payload = {"capabilities": {"feeds": feeds, "modules": modules}};
@@ -28,13 +41,14 @@ var sendFeedResponse = function(sendTo, feed) {
         if (accelZ && accelY && accelX) {
             payload = {"Acceleration": {"z": accelZ, "y": accelY, "x": accelX}};
         } else {
-            //payload = {"Acceleration": "<Acceleration>\n <sample z='0.0' y='0.0 x='0.0'/>\n</Acceleration>"};
-            //payload = {"Acceleration": {"z": Math.floor(Math.random()*10), "y": Math.floor(Math.random()*10), "x": Math.floor(Math.random()*10)}};
-            payload = {"Acceleration": "No values"};
+            payload = {"Acceleration": "No data"};
         }
     } else if (feed === "Location") {
-        payload = {"Location":"<Location>\n <Latitude>0.7107870541151219 rad</Latitude>\n <Longitude>-1.291491722930557 rad</Longitude>\n <Altitude>0.0 m</Altitude>\n <LatitudeDegrees>40.725098333333335</LatitudeDegrees>\n <LongitudeDegrees>-73.997025</LongitudeDegrees>\n</Location>"};
-        //payload = {"Location": "<Location>\n Location Here \n</Location>"};
+        if (gpsLat && gpsLon) {
+            payload = {"Location":{"latitude": gpsLat, "longitude": gpsLon}};
+        } else {
+            payload = {"Location": "No data"};
+        }
     }
     if (payload) {
         console.log("Sending Feed Response to " + sendTo);
@@ -43,7 +57,7 @@ var sendFeedResponse = function(sendTo, feed) {
 };
 
 var respondToFeedRequest = function(from, payload) {
-    var sendTo, feed, params;
+    var sendTo, feed, params, accelerationInterval, locationInterval;
     sendTo = from.resource;
     feed = payload.feed
     params = payload.params;
@@ -51,8 +65,8 @@ var respondToFeedRequest = function(from, payload) {
         var frequency = params.frequency;
     }
     if (frequency) {
-        var accelerationInterval = window[sendTo + "_acceleration"];
-        var locationInterval = window[sendTo + "_location"];
+        accelerationInterval = window[sendTo + "_acceleration"];
+        locationInterval = window[sendTo + "_location"];
         if (feed === "Acceleration") {
             if (accelerationInterval) {
                 clearInterval(accelerationInterval);
@@ -136,7 +150,7 @@ SWARM.connect({apikey: participationKey,
                resource: resourceID,
                swarms: [swarmID],
 
-               // callbacks
+               //callbacks
                onconnect:
                    function onConnect() {
                        console.log("Connected to swarm: " + swarmID);
