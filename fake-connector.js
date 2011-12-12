@@ -14,12 +14,6 @@ if (window.DeviceMotionEvent) {
     }
 }
 
-window.addEventListener('deviceorientation', function(event) {
-    accelZ = event.alpha;
-    accelY = event.beta;
-    accelX = event.gamma;
-}, false);
-
 // send functions
 var sendCapabilities = function(from) {
     var payload;
@@ -57,9 +51,17 @@ var respondToFeedRequest = function(from, payload) {
         var frequency = params.frequency;
     }
     if (frequency) {
+        accelerationInterval = window[resourceID + "_acceleration"];
+        locationInterval = window[resourceID + "_location"];
         if (feed === "Acceleration") {
+            if (accelerationInterval) {
+                clearInterval(accelerationInterval);
+            }            
             window[sendTo + "_acceleration"] = setInterval(function () { sendFeedResponse(sendTo, feed);}, frequency*1000);
         } else if (feed === "Location") {
+            if (locationInterval) {
+                clearInterval(locationInterval);
+            }
             window[sendTo + "_location"] = setInterval(function () { sendFeedResponse(sendTo, feed);}, frequency*1000);
         }
     } else {
@@ -158,6 +160,7 @@ SWARM.connect({apikey: participationKey,
                    },
                onmessage:
                    function onMessage(message) {
+                       console.log("Message: " + message);
                        var messageObj, from, payload, publicVal;
                
                        messageObj = JSON.parse(message);
