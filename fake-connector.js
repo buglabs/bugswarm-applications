@@ -5,6 +5,15 @@ swarmID = "244d8089bb8ec55a2fce40b89b59555b052ee96a";
 feeds = ["Location", "Acceleration"];
 modules = {"slot1": "LCD", "slot2": "GPS"};
 
+var accelZ, accelY, accelX;
+if (window.DeviceMotionEvent) {
+    window.ondevicemotion = function(e) {
+        accelZ = e.accelerationIncludingGravity.z;
+        accelY = e.accelerationIncludingGravity.y;
+        accelX = e.accelerationIncludingGravity.x;
+    }
+}
+
 // send functions
 var sendCapabilities = function(from) {
     var payload;
@@ -15,20 +24,13 @@ var sendCapabilities = function(from) {
 
 var sendFeedResponse = function(sendTo, feed) {    
     var payload;
-    if (feed === "Acceleration") {
-        var accelZ, accelY, accelX;
-        if (window.DeviceMotionEvent) {
-            window.ondevicemotion = function(e) {
-                accelZ = e.accelerationIncludingGravity.z;
-                accelY = e.accelerationIncludingGravity.y;
-                accelX = e.accelerationIncludingGravity.x;
-            }
-        }
+    if (feed === "Acceleration") {       
         if (accelZ && accelY && accelX) {
             payload = {"Acceleration": {"z": accelZ, "y": accelY, "x": accelX}};
         } else {
             //payload = {"Acceleration": "<Acceleration>\n <sample z='0.0' y='0.0 x='0.0'/>\n</Acceleration>"};
-            payload = {"Acceleration": {"z": Math.floor(Math.random()*10), "y": Math.floor(Math.random()*10), "x": Math.floor(Math.random()*10)}};
+            //payload = {"Acceleration": {"z": Math.floor(Math.random()*10), "y": Math.floor(Math.random()*10), "x": Math.floor(Math.random()*10)}};
+            payload = {"Acceleration": "No values"};
         }
     } else if (feed === "Location") {
         payload = {"Location":"<Location>\n <Latitude>0.7107870541151219 rad</Latitude>\n <Longitude>-1.291491722930557 rad</Longitude>\n <Altitude>0.0 m</Altitude>\n <LatitudeDegrees>40.725098333333335</LatitudeDegrees>\n <LongitudeDegrees>-73.997025</LongitudeDegrees>\n</Location>"};
