@@ -45,8 +45,7 @@ var sendFeedResponse = function(sendTo, feed) {
         }
     } else if (feed === "Location") {
         if (gpsLat && gpsLon) {
-            payload = {"Location": "<Location><Latitude>" + gpsLat + "</Latitude><Longitude>" + gpsLon + "</Longitude><Altitude>0.0</Altitude><LatitudeDegrees>" + gpsLat + "</LatitudeDegrees><LongitudeDegrees>" + gpsLon + "</LongitudeDegrees></Location>"};
-            //payload = {"Location":{"latitude": gpsLat, "longitude": gpsLon}};
+            payload = {"Location":{"latitude": gpsLat, "longitude": gpsLon}};
         } else {
             payload = {"Location": "No data"};
         }
