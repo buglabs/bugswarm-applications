@@ -14,6 +14,12 @@ if (window.DeviceMotionEvent) {
     }
 }
 
+window.addEventListener('deviceorientation', function(event) {
+    accelZ = event.alpha;
+    accelY = event.beta;
+    accelX = event.gamma;
+}, false);
+
 // send functions
 var sendCapabilities = function(from) {
     var payload;
