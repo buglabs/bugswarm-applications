@@ -25,7 +25,7 @@ var gpsHandler = function(location) {
     gpsLon = location.coords.longitude;
 };
 
-var updateGPS = setInterval(function() {navigator.geoLocation.getCurrentPosition(gpsHandler);},1000);
+var updateGPS = setInterval(function() {navigator.geolocation.getCurrentPosition(gpsHandler);},1000);
 
 //send functions
 var sendCapabilities = function(from) {
